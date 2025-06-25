@@ -26,7 +26,7 @@ if __name__ == '__main__':
     addr_list = generator.get_gran_addr_list()
     
     task_args = []
-    with open(f'output/output_{mode}.txt', 'r', encoding='utf-8') as f:
+    with open(f'single/output_{mode}.txt', 'r', encoding='utf-8') as f:
         for line in f:
             str_list = line.strip('[]\n').split(', ')
             int_list = [int(x) for x in str_list]
@@ -44,6 +44,6 @@ if __name__ == '__main__':
                 mask_list.append(result)
 
     
-    with open(f'output/output_{mode}_real.txt', 'w', encoding='utf-8') as f:
+    with open(f'single/output_{mode}_real.txt', 'w', encoding='utf-8') as f:
         for item in mask_list:
             f.write(str(item) + '\n')
