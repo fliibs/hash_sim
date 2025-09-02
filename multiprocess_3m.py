@@ -6,25 +6,28 @@ addr_list = []
 gran_addr_list = []
 
 def check_config(args):
-    mask_0, mask_1, mask_2, sel_bit0, sel_bit1, sel_bit2, mask_sel0, mask_sel1, mask_sel2 = args
-    hash_machine = NIUOCMHashOpt(mask_0, mask_1, mask_2, sel_bit0, sel_bit1, sel_bit2, mask_sel0, mask_sel1, mask_sel2, getattr(Config, f"hash_gran_{mode}_index"))
+    mask_0, mask_1, mask_2, sel_bit0, sel_bit1, sel_bit2, sel_bit3, mask_sel0, mask_sel1, mask_sel2, mask_sel3 = args
+    hash_machine = NIUOCMHashOpt3M(mask_0, mask_1, mask_2, sel_bit0, sel_bit1, sel_bit2, sel_bit3, mask_sel0, mask_sel1, mask_sel2, mask_sel3, getattr(Config, f"hash_gran_{mode}_index"))
     checker = HashChecker(generator.start)
     res_bin_list = [0 for _ in range(3)]
     for elem in addr_list:
         tgt_id = hash_machine.hash_and(elem)
         res_bin_list[tgt_id] += 1
-        if checker.add_addr(elem, tgt_id, hash_machine.reserve_list)==-1: 
+        if checker.add_addr_3m(elem, tgt_id, hash_machine.reserve_list)==-1: 
             hash_machine.show()
             return None
-        
+    
+    # print(res_bin_list)
+    
     if len(set(res_bin_list)) == 1:
         return hash_machine.get_config()
+    
     return None
 
 
 def check_gran_config(args):
-    mask_0, mask_1, mask_2, sel_bit0, sel_bit1, sel_bit2, mask_sel0, mask_sel1, mask_sel2 = args
-    hash_machine = NIUOCMHashOpt(mask_0, mask_1, mask_2, sel_bit0, sel_bit1, sel_bit2, mask_sel0, mask_sel1, mask_sel2, getattr(Config, f"hash_gran_{mode}_index"))
+    mask_0, mask_1, mask_2, sel_bit0, sel_bit1, sel_bit2, sel_bit3, mask_sel0, mask_sel1, mask_sel2, mask_sel3 = args
+    hash_machine = NIUOCMHashOpt3M(mask_0, mask_1, mask_2, sel_bit0, sel_bit1, sel_bit2, sel_bit3, mask_sel0, mask_sel1, mask_sel2, mask_sel3, getattr(Config, f"hash_gran_{mode}_index"))
     for addr_list_elem in gran_addr_list:
         res_bin_list = [0 for _ in range(3)]
         for elem in addr_list_elem:
@@ -34,7 +37,7 @@ def check_gran_config(args):
         if sum(1 for x in res_bin_list if x != 0) == 1: pass 
         else:                                           return None
         
-    # print(mask_0, mask_1, mask_2, sel_bit0, sel_bit1, res_bin_list)
+    # print(mask_0, mask_1, mask_2, res_bin_list)
     return hash_machine.get_config()
 
 
@@ -48,14 +51,15 @@ if __name__ == '__main__':
     # process in range
     #=====================================================
     task_args = [
-        (m0, m1, m2, b0, b1, b2, ms0, ms1, ms2)
+        (m0, m1, m2, b0, b1, b2, b3, ms0, ms1, ms2, ms3)
         for m0 in range(8)
         for m1 in range(8)
         for m2 in range(8)
         for b0 in range(23,24)
         for b1 in range(24,25)
         for b2 in range(25,26)
-        for ms0, ms1, ms2 in [(1,1,1)]
+        for b3 in range(22,23)
+        for ms0, ms1, ms2, ms3 in [(1,1,1,1)]
     ]
 
     total = len(task_args)
@@ -73,7 +77,7 @@ if __name__ == '__main__':
             mask_list.append(result)
 
     # print("Balanced configs found:", mask_list)
-    with open(f'output2/output_{mode}.txt', 'w') as f:
+    with open(f'output2/output_{int(xbar_mode/2)}.txt', 'w') as f:
         for item in mask_list:
             f.write(str(item) + '\n')
             
@@ -90,6 +94,6 @@ if __name__ == '__main__':
                 gran_mask_list.append(result)
 
     
-    with open(f'output2/output_{mode}_real.txt', 'w', encoding='utf-8') as f:
+    with open(f'output2/output_{int(xbar_mode/2)}_real.txt', 'w', encoding='utf-8') as f:
         for item in gran_mask_list:
             f.write(str(item) + '\n')

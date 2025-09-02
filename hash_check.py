@@ -23,7 +23,7 @@ def check_config(args):
             raise Exception('error 1')
             return "None"
     
-    print(res_all_list)
+    # print(res_all_list)
     if len(set(res_all_list)) == 1:
         return hash_machine.get_config()
     raise Exception('error 2') 
