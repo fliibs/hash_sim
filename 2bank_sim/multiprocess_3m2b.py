@@ -8,8 +8,8 @@ addr_list = []
 gran_addr_list = []
 
 def check_config(args):
-    args_res = (args << top_range)+ niu_mode 
-    # print(f'Checking mask: {hex(args_res)}')
+    args_res = (1 << top_range)+ niu_mode 
+    print(f'Checking mask: {hex(args_res)}')
     hash_machine = NIUOCMHashOpt3M2B(args_res)
     checker = HashChecker(generator.start)
     res_bin_list = [0 for _ in range(2)]
@@ -52,10 +52,10 @@ if __name__ == '__main__':
     #=====================================================
     # process in range
     #=====================================================
-    top_range  = math.ceil(math.log2(niu_mode)) + 1
+    top_range  = math.ceil(math.log2(xbar_mode)) + 1
     print(f"Top range: {top_range} bits")
     population = range(0, 2**(40-top_range))
-    task_args  = random.sample(population, 10000)
+    task_args  = random.sample(population, 1)
 
     total = len(task_args)
     print(f"Total combinations: {total}")
@@ -71,8 +71,8 @@ if __name__ == '__main__':
 
     with open(f'output2/output_{int(xbar_mode/2)}.txt', 'w') as f:
         for item in mask_list:
-            f.write(str(item) + '\n')
-            
+            f.write(hex(item) + '\n')   
+
     #=====================================================
     # process in gran
     #=====================================================
@@ -88,4 +88,4 @@ if __name__ == '__main__':
     
     with open(f'output2/output_{int(xbar_mode/2)}_real.txt', 'w', encoding='utf-8') as f:
         for item in gran_mask_list:
-            f.write(str(item) + '\n')
+            f.write(hex(item) + '\n')

@@ -4,15 +4,15 @@ import math
 mode = '256'
 xbar_mode = 1024
 global_mask = 0x92492498400
-niu_mode  = 2048
+niu_mode  = 512
 
 # xbar_mode = 512
 # global_mask = 0x92492498200
-# niu_mode  = 1024
+# niu_mode  = 256
 
 # xbar_mode = 2048
 # global_mask = 0x92492498800
-# niu_mode  = 4096
+# niu_mode  = 1024
 
 top_range  = math.ceil(math.log2(niu_mode)) + 1
 
@@ -95,6 +95,7 @@ class ADDRGenerator():
         self.gran       = gran 
         self.xbar_mode  = xbar_mode
         self.mask       = global_mask
+        self.niu_mode   = niu_mode
         
     def get_addr_list(self):
         return [elem for elem in range(self.start, self.end+1, self.gran)]
@@ -107,7 +108,8 @@ class ADDRGenerator():
         
     def get_mask_addr_list(self, default=True):
         lst = []
-        for elem in range(self.start, self.end+1, self.xbar_mode):
+        # for elem in range(self.start, self.end+1, self.xbar_mode):
+        for elem in range(self.start, self.end+1, self.niu_mode):
             mask_addr = elem & self.mask 
             if bitwise_self_xor(mask_addr)==default:
                 lst.append(elem)
